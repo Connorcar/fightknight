@@ -1,9 +1,12 @@
+let playerTurnResolver;
+
 var playerMaxHP = 30;
 var playerCurrHP = 30;
 var playerMaxFP = 10;
 var playerCurrFP = 10;
 
-var playerBlockCharges = 2;
+var playerCurrBlockCharges = 2;
+var playerMaxBlockCharges = 2;
 
 var enemyCurrHP = 30;
 var enemyMaxHP = 30;
@@ -40,7 +43,45 @@ var enemyNextMoveText = document.getElementById("EnemyNextMoveText");
 
 var combatLogText = document.getElementById("combat-log");
 
-function PlayerTurn() {
+function InitializeListeners() {
+    attackButton.addEventListener('click', function() {
+        mv_Attack();
+        UpdateText();
+        playerTurnResolver();
+    });
+    parryButton.addEventListener('click', function() {
+        mv_Parry();
+        UpdateText();
+        playerTurnResolver();
+    });
+    blockButton.addEventListener('click', function() {
+        mv_Block();
+        UpdateText();
+        playerTurnResolver();
+    });
+    healthPotionButton.addEventListener('click', function() {
+        im_HealthPotion();
+        UpdateText();
+        playerTurnResolver();
+    });
+    manaPotionButton.addEventListener('click', function() {
+        im_ManaPotion();
+        UpdateText();
+        playerTurnResolver();
+    });
+    buffDamageButton.addEventListener('click', function() {
+        im_BuffDamage();
+        UpdateText();
+        playerTurnResolver();
+    });
+    buffHealthButton.addEventListener('click', function() {
+        im_BuffHealth();
+        UpdateText();
+        playerTurnResolver();
+    });
+}
+
+async function PlayerTurn() {
     playerIsBlocking = false;
     playerIsParrying = false;
 
@@ -48,42 +89,8 @@ function PlayerTurn() {
         YouLose();
     }
 
-    return new Promise(resolve => {
-        attackButton.addEventListener('click', function() {
-            mv_Attack();
-            UpdateText();
-            resolve();
-        });
-        parryButton.addEventListener('click', function() {
-            mv_Parry();
-            UpdateText();
-            resolve();
-        });
-        blockButton.addEventListener('click', function() {
-            mv_Block();
-            UpdateText();
-            resolve();
-        });
-        healthPotionButton.addEventListener('click', function() {
-            im_HealthPotion();
-            UpdateText();
-            resolve();
-        });
-        manaPotionButton.addEventListener('click', function() {
-            im_ManaPotion();
-            UpdateText();
-            resolve();
-        });
-        buffDamageButton.addEventListener('click', function() {
-            im_BuffDamage();
-            UpdateText();
-            resolve();
-        });
-        buffHealthButton.addEventListener('click', function() {
-            im_BuffHealth();
-            UpdateText();
-            resolve();
-        });
+    return new Promise((resolve) => {
+        playerTurnResolver = resolve;
     });
 }
 
@@ -95,57 +102,86 @@ async function EnemyTurn() {
     if (enemyCurrHP <= 0) {
         YouWin();  
     }
+
+    if (enemyNextMove == "Attack") { en_Attack(); }
+    else if (enemyNextMove == "Parry") { en_Parry(); }
+    else if (enemyNextMove == "Block") { en_Block(); }
+
+    UpdateText();
+    EnemyActionPicker();
+}
+
+function EnemyActionPicker() {
+    var num = Math.floor(Math.random()*4);
+    if (num <= 1) { 
+        enemyNextMove = "Attack";
+    }
+    else if (num == 2) {
+        enemyNextMove = "Parry";
+    }
+    else {
+        enemyNextMove = "Block";
+    }
     UpdateText();
 }
 
 function mv_Attack() {
     if (enemyIsBlocking) {
-        combatLogText.innerText = "Attack blocked!";
+        combatLogText.innerText = "You dealt 0 damage!";
         return;
     }
     else if (enemyIsParrying) {
         enemyCurrHP -= Math.floor(playerAttackDamage/2);
         playerCurrHP -= Math.floor(enemyAttackDamage/4);
-        combatLogText.innerText = "Dealt " + Math.floor(playerAttackDamage/2) + " damage and took "
-        + Math.floor(enemyAttackDamage/4); + " damage!";
+        combatLogText.innerText = "You dealt " + Math.floor(playerAttackDamage/2) + " damage and took " 
+        + Math.floor(enemyAttackDamage/4) + " damage!";
         return;
     }
     else {
         enemyCurrHP -= playerAttackDamage;
-        combatLogText.innerText = "Dealt " + playerAttackDamage + " damage!";
-        console.log("enemy hp: " + enemyCurrHP + "/" + enemyMaxHP);
+        combatLogText.innerText = "You dealt " + playerAttackDamage + " damage!";
     }
 }
 
 function en_Attack() {
     if (playerIsBlocking) {
+        combatLogText.innerText = "You took 0 damage!";
         return;
     }
     else if (playerIsParrying) {
         playerCurrHP -= Math.floor(enemyAttackDamage/2);
         enemyCurrHP -= Math.floor(playerAttackDamage/4);
+        combatLogText.innerText = "You took " + Math.floor(enemyAttackDamage/2) + " damage and dealt " 
+        + Math.floor(playerAttackDamage/4) + " damage!";
         return;
     }
-    playerCurrHP -= enemyAttackDamage;
+    else {
+        playerCurrHP -= enemyAttackDamage;
+        combatLogText.innerText = "You took " + enemyAttackDamage + " damage!";
+    }
 }
 
 function mv_Parry() {
     playerIsParrying = true;
+    combatLogText.innerText = "You are prepared to parry next attack.";
 }
 
 function en_Parry() {
     enemyIsParrying = true;
+    combatLogText.innerText = "Enemy is prepared to parry next attack.";
 }
 
 function mv_Block() {
-    if (playerBlockCharges > 0) {
+    if (playerCurrBlockCharges > 0) {
         playerIsBlocking = true;
-        playerBlockCharges -= 1;
+        playerCurrBlockCharges -= 1;
     }
+    combatLogText.innerText = "You are prepared to block next attack.";
 }
 
 function en_Block() {
     enemyIsBlocking = true;
+    combatLogText.innerText = "Enemy is prepared to block next attack.";
 }
 
 function im_HealthPotion() {
@@ -192,12 +228,13 @@ function UpdateText() {
     playerFPtext.innerText = "FP: " + playerCurrFP + "/" + playerMaxFP;
     enemyHPtext.innerText = "HP: " + enemyCurrHP + "/" + enemyMaxHP;
     enemyNextMoveText.innerText = "Next Move: " + enemyNextMove;
+    blockButton.innerText = "BLOCK (" + playerCurrBlockCharges + "/" + playerMaxBlockCharges + ")";
 }
 
 function EnableButtons() {
     attackButton.disabled = false;
     parryButton.disabled = false;
-    if (playerBlockCharges > 0) { blockButton.disabled = false; }
+    if (playerCurrBlockCharges > 0) { blockButton.disabled = false; }
     if (playerCurrFP > im_healthpotion_cost) { healthPotionButton.disabled = false; }
     manaPotionButton.disabled = false;
     if (playerCurrFP > im_buffdamage_cost) { buffDamageButton.disabled = false; }
@@ -233,6 +270,9 @@ function delay(ms) {
 
 async function main() {
     turn = 0;
+    InitializeListeners();
+    EnemyActionPicker();
+
     while (enemyCurrHP > 0 && playerCurrHP > 0) {
         // do combat
         if (turn % 2 === 0) {
