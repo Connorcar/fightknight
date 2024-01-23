@@ -95,7 +95,7 @@
     margin-left: auto;
     margin-right: auto;
 
-    width: 60%;
+    width: 100%;
 
     background-color: rgb(255, 255, 255);
     padding: 5px 15px;
@@ -140,5 +140,8 @@
     }
     .container2 {
       width: 90%;
+    }
+    .combat-img {
+      height: 200px;
     }
   }

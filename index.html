@@ -20,38 +20,56 @@
   <div class="container">
     <image class="combat-img" src="https://i.pinimg.com/originals/03/c9/1b/03c91b58b734eb38c938cb7ecf6310f0.jpg"></image>
     <div class="player-stats">
-      <p style="color:red">HP: 30/30</p>
-      <p style="color:blue">FP: 10/10</p>
+      <p style="color:red" id="PlayerHPtext">HP: 30/30</p>
+      <p style="color:blue" id="PlayerFPtext">FP: 10/10</p>
     </div>
     <div class="enemy-stats">
-      <p>HP: 10/10</p>
-      <p>Next Move: ???</p>
+      <p id="EnemyHPtext">HP: 30/30</p>
+      <p id="EnemyNextMoveText">Next Move: ???</p>
     </div>
   </div>
+  <div class="container">
+    <p class="combat-log" id="combat-log">Player's Turn</p>
+  </div>
   <div class="container2">
-    <p class="combat-log">Player's Turn</p>
     <div class="buttons">
-      <button class="move-button" title="Deal full damage">ATTACK</button>
-      <button class="move-button" title="Block half damage and deal quarter damage">PARRY</button>
-      <button class="move-button" title="Block full damage">BLOCK (2/2)</button>
+
+      <button class="move-button" id="AttackButton" 
+      title="Deal full damage">ATTACK</button>
+
+      <button class="move-button" id="ParryButton" 
+      title="Block half damage and deal quarter damage">PARRY</button>
+
+      <button class="move-button" id="BlockButton"
+      title="Block full damage">BLOCK (2/2)</button>
+
     </div>
     <div class="buttons">
-      <button class="item-button" title="Recover 30% HP">
+
+      <button class="item-button" id="HealthPotionButton"
+      title="Recover 30% HP">
         <span>HEALTH POTION<br></span>
         <span class="btn-subtext">Cost: 2 FP</span>
       </button>
-      <button class="item-button" title="Recover 5 FP">
+
+      <button class="item-button" id="ManaPotionButton"
+      title="Recover 5 FP">
         <span>MANA POTION<br></span>
         <span class="btn-subtext">Cost: 0 FP</span>
       </button>
-      <button class="item-button" title="Increase Attack Dmg by 20%">
+
+      <button class="item-button" id="BuffDamageButton"
+      title="Increase Attack Dmg by 20%">
         <span>BUFF DAMAGE<br></span>
         <span class="btn-subtext">Cost: 3 FP</span>
       </button>
-      <button class="item-button" title="Increase Max HP by 10%">
+
+      <button class="item-button" id="BuffHealthButton"
+      title="Increase Max HP by 10%">
         <span>BUFF HEALTH<br></span>
         <span class="btn-subtext">Cost: 3 FP</span>
       </button>
+
     </div>
   </div>
   
