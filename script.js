@@ -3,6 +3,8 @@ var playerCurrHP;
 var playerMaxFP;
 var playerCurrFP;
 
+var playerBlockCharges;
+
 var enemyCurrHP;
 var enemyMaxHP;
 var enemyNextMove;
@@ -74,7 +76,10 @@ function en_Parry() {
 }
 
 function mv_Block() {
-    playerIsBlocking = true;
+    if (playerBlockCharges > 0) {
+        playerIsBlocking = true;
+        playerBlockCharges -= 1;
+    }
 }
 
 function en_Block() {
@@ -129,7 +134,7 @@ function EnableButtons() {
 }
 
 function DisableButtons() {
-    
+
 }
 
 function YouWin() {
