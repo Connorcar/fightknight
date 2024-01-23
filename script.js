@@ -253,11 +253,11 @@ function DisableButtons() {
 }
 
 function YouWin() {
-
+    combatLogText.innerText = "YOU WIN!";
 }
 
 function YouLose() {
-
+    combatLogText.innerText = "YOU LOSE!";
 }
 
 function delay(ms) {
@@ -273,7 +273,7 @@ async function main() {
     InitializeListeners();
     EnemyActionPicker();
 
-    while (enemyCurrHP > 0 && playerCurrHP > 0) {
+    while (true) {
         // do combat
         if (turn % 2 === 0) {
             console.log("player turn");
@@ -288,6 +288,15 @@ async function main() {
             await delay(1000);
         }
         turn += 1;
+
+        if (enemyCurrHP <= 0) {
+            YouWin();
+            return;
+        }
+        if (playerCurrHP <= 0) {
+            YouLose();
+            return;
+        }
     }
 }
 
