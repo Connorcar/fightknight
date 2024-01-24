@@ -145,12 +145,21 @@ function mv_Attack() {
 
 function en_Attack() {
     if (playerIsBlocking) {
-        combatLogText.innerText = "You took 0 damage!";
+        playerCurrFP += 5;
+        if (playerCurrFP > playerMaxFP) {
+            playerCurrFP = playerMaxFP;
+        }
+        combatLogText.innerText = "You took 0 damage, and gained 5 FP!";
         return;
     }
     else if (playerIsParrying) {
         playerCurrHP -= Math.floor(enemyAttackDamage/2);
         enemyCurrHP -= Math.floor(playerAttackDamage/4);
+
+        if (playerCurrBlockCharges < playerMaxBlockCharges) {
+            playerCurrBlockCharges += 1;
+        }
+
         combatLogText.innerText = "You took " + Math.floor(enemyAttackDamage/2) + " damage and dealt " 
         + Math.floor(playerAttackDamage/4) + " damage!";
         return;
