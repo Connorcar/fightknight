@@ -185,13 +185,15 @@ function en_Block() {
 }
 
 function im_HealthPotion() {
-    if (playerCurrFP >= im_healthpotion_cost) {
-        playerCurrFP -= im_healthpotion_cost;
+    playerCurrFP -= im_healthpotion_cost;
 
-        playerCurrHP += Math.floor(playerMaxHP*0.3);
-        if (playerCurrHP > playerMaxHP) {
-            playerCurrHP = playerMaxHP;
-        }
+    playerCurrHP += Math.floor(playerMaxHP*0.3);
+    if (playerCurrHP > playerMaxHP) {
+        playerCurrHP = playerMaxHP;
+        combatLogText.innerText = "Healed to max HP!";
+    }
+    else {
+        combatLogText.innerText = "Healed " + Math.floor(playerMaxHP*0.3) + " HP!";
     }
 }
 
@@ -199,28 +201,31 @@ function im_ManaPotion() {
     playerCurrFP += 5;
     if (playerCurrFP > playerMaxFP) {
         playerCurrFP = playerMaxFP;
+        combatLogText.innerText = "Refilled to max FP!";
+    }
+    else {
+        combatLogText.innerText = "Gained 5 FP!";
     }
 }
 
 function im_BuffDamage() {
-    if (playerCurrFP >= im_buffdamage_cost) {
-        playerCurrFP -= im_buffdamage_cost;
+    playerCurrFP -= im_buffdamage_cost;
+    playerAttackDamage += Math.floor(playerAttackDamage*0.2);
 
-        playerAttackDamage += Math.floor(playerAttackDamage*0.2);
-    }
+    combatLogText.innerText = "Increased attack dmg by 20%!";
 }
 
 function im_BuffHealth() {
-    if (playerCurrFP >= im_buffhealth_cost) {
-        playerCurrFP -= im_buffhealth_cost;
+    playerCurrFP -= im_buffhealth_cost;
 
-        playerMaxHP += Math.floor(playerMaxHP*0.1);
-        playerCurrHP += Math.floor(playerMaxHP*0.1);
+    playerMaxHP += Math.floor(playerMaxHP*0.1);
+    playerCurrHP += Math.floor(playerMaxHP*0.1);
 
-        if (playerCurrHP > playerMaxHP) {
-            playerCurrHP = playerMaxHP;
-        }
+    if (playerCurrHP > playerMaxHP) {
+        playerCurrHP = playerMaxHP;
     }
+
+    combatLogText.innerText = "Increased max health to " + playerMaxHP + "!";
 }
 
 function UpdateText() {
@@ -235,8 +240,8 @@ function EnableButtons() {
     attackButton.disabled = false;
     parryButton.disabled = false;
     if (playerCurrBlockCharges > 0) { blockButton.disabled = false; }
-    if (playerCurrFP > im_healthpotion_cost) { healthPotionButton.disabled = false; }
-    manaPotionButton.disabled = false;
+    if ((playerCurrFP > im_healthpotion_cost) && (playerCurrHP < playerMaxHP)) { healthPotionButton.disabled = false; }
+    if (playerCurrFP < playerMaxFP) {manaPotionButton.disabled = false; }
     if (playerCurrFP > im_buffdamage_cost) { buffDamageButton.disabled = false; }
     if (playerCurrFP > im_buffhealth_cost) { buffHealthButton.disabled = false; }
     
@@ -270,6 +275,7 @@ function delay(ms) {
 
 async function main() {
     turn = 0;
+    DisableButtons();
     InitializeListeners();
     EnemyActionPicker();
 
