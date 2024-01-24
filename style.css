@@ -51,6 +51,7 @@
 
   html {
     background-color: rgb(194, 205, 205);
+    color: black;
   }
 
   .container {
@@ -86,6 +87,10 @@
   .enemy-stats {
     float: right;
     text-align: right;
+  }
+
+  #EnemyNextMoveText {
+    font-weight: bold;
   }
 
   .combat-log {
