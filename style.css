@@ -89,6 +89,10 @@
     text-align: right;
   }
 
+  #EnemyStatusText {
+    font-weight: bold;
+  }
+
   #EnemyNextMoveText {
     font-weight: bold;
   }
