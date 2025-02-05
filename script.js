@@ -344,7 +344,6 @@ function delay(ms) {
 async function main() {
     Reset();
     DisableButtons();
-    InitializeListeners();
     EnemyActionPicker();
 
     while (true) {
@@ -379,4 +378,5 @@ async function main() {
     }
 }
 
+InitializeListeners();
 main();
