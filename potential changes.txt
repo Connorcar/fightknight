@@ -10,8 +10,6 @@ when new fight begins change parry text to PARRY
 
 player can use unlimited FP during between fight phase
 
-pressing "next fight" after fight #2 makes you parry instead of resetting the fight
-- the issue may be main() being called recursively
-- i have found that every time you start another fight, all of the values on every button doubles. So somehow it makes it so each button is clicked 1 additional time depending on which fight you are on. So somehow 
-
 parry calculation seems to be wrong for when player's dmg is buffed and enemy parries an attack
+
+make enemies also deal more damage each round
