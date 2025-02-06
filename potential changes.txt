@@ -1,12 +1,8 @@
 change parry to 2/2 damage
 
-nerf block's fp gain
-
 enemy max hp multiplier into a variable
 
 reset player's block count on new fight
-
-when new fight begins change parry text to PARRY
 
 player can use unlimited FP during between fight phase
 

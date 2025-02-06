@@ -22,6 +22,8 @@ var enemyIsParrying = false;
 var playerAttackDamage = 6;
 var enemyAttackDamage = 6;
 
+var playerFPGainedFromBlock = 3;
+
 var turn = 0;
 var fightNum = 1;
 var betweenFights = false;
@@ -56,7 +58,7 @@ function InitializeListeners() {
     parryButton.addEventListener('click', function() {
         if (betweenFights) {
             betweenFights = false;
-            parryButton.innerHTML = "Parry";
+            parryButton.innerHTML = "PARRY";
             main();
         }
         else {
@@ -158,11 +160,13 @@ function mv_Attack() {
 
 function en_Attack() {
     if (playerIsBlocking) {
+        FP_gained = Math.min(playerFPGainedFromBlock, playerMaxFP-playerCurrFP);
+
         playerCurrFP += 5;
         if (playerCurrFP > playerMaxFP) {
             playerCurrFP = playerMaxFP;
         }
-        combatLogText.innerText = "You took 0 damage, and gained 5 FP!";
+        combatLogText.innerText = "You took 0 damage, and gained " + FP_gained + " FP!";
         //return;
     }
     else if (playerIsParrying) {
